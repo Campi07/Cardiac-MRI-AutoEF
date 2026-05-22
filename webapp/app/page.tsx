@@ -2,6 +2,8 @@ import Navbar from "@/components/Navbar"
 import UploadBox from "@/components/UploadBox"
 import MRIPreview from "@/components/MRIPreview"
 import ResultsPanel from "@/components/ResultsPanel"
+import PatientList from "@/components/PatientList"
+
 
 export default function Home() {
 
@@ -20,6 +22,12 @@ export default function Home() {
         <div className="lg:col-span-2">
           <ResultsPanel />
         </div>
+
+              <div className="mx-auto max-w-6xl p-8">
+
+        <PatientList />
+
+      </div>
 
       </div>
 
