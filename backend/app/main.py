@@ -1,9 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+import numpy as np
+import matplotlib.pyplot as plt
+import nibabel as nib
+import uuid
+import os
 
 app = FastAPI()
 
-# Permitir conexión con frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -12,7 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Fake database
 patients = [
     {
         "id": 1,
@@ -35,3 +39,46 @@ def root():
 @app.get("/patients")
 def get_patients():
     return patients
+
+
+@app.post("/upload")
+async def upload_mri(file: UploadFile = File(...)):
+
+    unique_id = str(uuid.uuid4())
+
+    temp_nifti_path = f"temp_{unique_id}.nii.gz"
+    preview_path = f"preview_{unique_id}.png"
+
+    contents = await file.read()
+
+    with open(temp_nifti_path, "wb") as f:
+        f.write(contents)
+
+    nii_img = nib.load(temp_nifti_path)
+
+    image_data = nii_img.get_fdata()
+
+    image_data = np.rot90(image_data, k=-1, axes=(0, 1))
+    image_data = np.fliplr(image_data)
+
+    corte = image_data.shape[2] // 2
+
+    plt.figure(figsize=(6, 6))
+    plt.imshow(image_data[:, :, corte], cmap="gray")
+    plt.axis("off")
+
+    plt.savefig(preview_path, bbox_inches="tight", pad_inches=0)
+
+    plt.close()
+
+    os.remove(temp_nifti_path)
+
+    return {
+        "preview_url": f"http://localhost:8000/preview/{preview_path}"
+    }
+
+
+@app.get("/preview/{image_name}")
+def get_preview(image_name: str):
+
+    return FileResponse(image_name)
