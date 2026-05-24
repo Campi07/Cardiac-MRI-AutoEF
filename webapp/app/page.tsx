@@ -6,6 +6,7 @@ import UploadBox from "@/components/UploadBox"
 import MRIPreview from "@/components/MRIPreview"
 import ResultsPanel from "@/components/ResultsPanel"
 import PatientList from "@/components/PatientList"
+import MRISliderViewer from "@/components/slider"
 
 export default function Home() {
   // EL CEREBRO: Aquí guardamos la memoria de la aplicación
@@ -36,6 +37,12 @@ export default function Home() {
           {/* Le pasamos la función para que al hacer clic en un paciente, se guarde en el cerebro */}
           <PatientList onSelectPatient={setSelectedPatient} />
         </div>
+
+        <div className="lg:col-span-2 mx-auto w-full max-w-6xl p-8">
+                {selectedPatient && (
+                <MRISliderViewer patientId={selectedPatient.id} />
+                  )}
+          </div>
 
       </div>
     </main>
