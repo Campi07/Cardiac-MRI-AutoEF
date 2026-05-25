@@ -2,22 +2,35 @@
 
 import { useEffect, useState } from "react"
 
+import {
+  getPatientSlices
+} from "@/services/api"
+
 interface Props {
-  patientId: number
+  patientId:number
 }
 
-export default function MRISliderViewer({ patientId }: Props) {
+export default function MRISliderViewer({
+  patientId
+}:Props) {
 
-  const [slices, setSlices] = useState<string[]>([])
-  const [currentSlice, setCurrentSlice] = useState(0)
+  const [slices, setSlices] =
+    useState<string[]>([])
+
+  const [currentSlice, setCurrentSlice] =
+    useState(0)
 
   useEffect(() => {
 
-    fetch(`http://127.0.0.1:8000/patients/${patientId}/slices`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSlices(data.slices)
-      })
+    async function loadSlices() {
+
+      const data =
+        await getPatientSlices(patientId)
+
+      setSlices(data.slices)
+    }
+
+    loadSlices()
 
   }, [patientId])
 
@@ -32,9 +45,9 @@ export default function MRISliderViewer({ patientId }: Props) {
       {slices.length > 0 && (
 
         <>
+
           <img
             src={slices[currentSlice]}
-            alt="MRI Slice"
             className="mx-auto rounded-xl"
           />
 
@@ -43,13 +56,14 @@ export default function MRISliderViewer({ patientId }: Props) {
             min={0}
             max={slices.length - 1}
             value={currentSlice}
-            onChange={(e) => setCurrentSlice(Number(e.target.value))}
+            onChange={(e)=>
+              setCurrentSlice(
+                Number(e.target.value)
+              )
+            }
             className="mt-6 w-full"
           />
 
-          <p className="mt-2 text-center text-slate-500">
-            Slice {currentSlice}
-          </p>
         </>
 
       )}

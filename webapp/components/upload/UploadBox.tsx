@@ -1,11 +1,15 @@
 "use client"
 
+import { uploadMRI } from "@/services/api"
+
 export default function UploadBox({
+
   onFileUpload,
   onPreviewGenerated
-}: {
-  onFileUpload: (file: File) => void
-  onPreviewGenerated: (url: string) => void
+
+}:{
+  onFileUpload:(file:File)=>void
+  onPreviewGenerated:(url:string)=>void
 }) {
 
   const handleFileChange = async (
@@ -18,32 +22,22 @@ export default function UploadBox({
 
     onFileUpload(file)
 
-    const formData = new FormData()
-
-    formData.append("file", file)
-
     try {
 
-      const response = await fetch(
-        "http://localhost:8000/upload",
-        {
-          method: "POST",
-          body: formData
-        }
+      const data = await uploadMRI(file)
+
+      onPreviewGenerated(
+        data.preview_url
       )
 
-      const data = await response.json()
+    } catch(error) {
 
-      onPreviewGenerated(data.preview_url)
-
-    } catch (error) {
-
-      console.error("Upload error:", error)
-
+      console.error(error)
     }
   }
 
   return (
+
     <div className="rounded-2xl border-2 border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
 
       <h2 className="mb-4 text-xl font-semibold text-slate-700">
@@ -54,7 +48,7 @@ export default function UploadBox({
         Drag and drop .nii or .nii.gz files
       </p>
 
-      <label className="cursor-pointer rounded-xl bg-slate-800 px-6 py-3 text-white hover:bg-slate-700">
+      <label className="cursor-pointer rounded-xl bg-slate-800 px-6 py-3 text-white hover:bg-slate-700 transition-all">
 
         Select MRI File
 
