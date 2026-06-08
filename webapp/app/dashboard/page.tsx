@@ -10,6 +10,8 @@ import MRIPreview from "@/components/viewer/MRIPreview"
 
 import PatientList from "@/components/patients/PatientList"
 
+import AnimationViewer from "@/components/viewer/AnimationViewer"
+
 export default function Dashboard() {
 
   const [selectedFile, setSelectedFile] =
@@ -17,6 +19,9 @@ export default function Dashboard() {
 
   const [previewUrl, setPreviewUrl] =
     useState<string | null>(null)
+
+  const [selectedPatientId, setSelectedPatientId] =
+  useState<number | null>(null)
 
   return (
 
@@ -36,6 +41,8 @@ export default function Dashboard() {
           patient={null}
           previewUrl={previewUrl}
         />
+
+        
 
         <div className="lg:col-span-2">
 

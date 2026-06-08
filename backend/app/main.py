@@ -8,7 +8,8 @@ from app.core.config import GENERATED_DIR
 from app.api import (
     upload,
     patients,
-    slices
+    slices,
+    animation
 )
 
 app = FastAPI()
@@ -30,6 +31,7 @@ app.add_middleware(
 app.include_router(upload.router)
 app.include_router(patients.router)
 app.include_router(slices.router)
+app.include_router(animation.router)
 
 @app.get("/")
 def root():

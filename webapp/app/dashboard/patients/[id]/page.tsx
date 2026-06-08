@@ -1,5 +1,6 @@
 import MRISliderViewer
 from "@/components/viewer/slider"
+import AnimationViewer from "@/components/viewer/AnimationViewer"
 
 interface Props {
   params: Promise<{
@@ -24,6 +25,11 @@ export default async function PatientPage({
       <MRISliderViewer
         patientId={Number(id)}
       />
+
+            <AnimationViewer
+        patientId={Number(id)}
+      />
+
 
     </main>
   )
