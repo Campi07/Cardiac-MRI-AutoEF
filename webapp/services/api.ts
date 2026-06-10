@@ -22,6 +22,19 @@ export async function getPatientSlices(
   return response.json()
 }
 
+export async function getGroundTruth(
+  patientId:number
+) {
+
+  const response =
+    await fetch(
+      `http://127.0.0.1:8000/patients/${patientId}/groundtruth`
+    )
+
+  return response.json()
+
+}
+
 export async function uploadMRI(
   file: File
 ) {
