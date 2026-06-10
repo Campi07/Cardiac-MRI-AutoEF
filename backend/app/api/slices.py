@@ -25,9 +25,14 @@ def get_patient_slices(
         nifti_path = (
             BASE_DIR.parent /
             "data" /
+            "training" /
             patient_name /
             f"{patient_name}_frame01.nii.gz"
         )
+
+        print("BASE_DIR =", BASE_DIR)
+        print("NIFTI PATH =", nifti_path)
+        print("EXISTS =", nifti_path.exists())
 
         if not nifti_path.exists():
 

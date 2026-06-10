@@ -3,16 +3,37 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.core.config import GENERATED_DIR
+from app.core.config import GENERATED_DIR, PATIENTS_DIR
+
+import shutil
+from contextlib import asynccontextmanager #borrar cuando se cierre fastapi
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    yield
+
+    if PATIENTS_DIR.exists():
+
+        shutil.rmtree(PATIENTS_DIR)
+
+        PATIENTS_DIR.mkdir(
+            parents=True,
+            exist_ok=True
+        )
 
 from app.api import (
     upload,
     patients,
     slices,
-    animation
+    animation,
+    groundtruth
 )
 
-app = FastAPI()
+app = FastAPI(
+    lifespan=lifespan
+)
 
 app.mount(
     "/generated",
@@ -32,6 +53,7 @@ app.include_router(upload.router)
 app.include_router(patients.router)
 app.include_router(slices.router)
 app.include_router(animation.router)
+app.include_router(groundtruth.router)
 
 @app.get("/")
 def root():
@@ -40,3 +62,4 @@ def root():
         "message":
         "Cardiac MRI AI Backend Running"
     }
+

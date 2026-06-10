@@ -29,6 +29,7 @@ def get_patient_animation(
         nifti_path = (
             BASE_DIR.parent /
             "data" /
+            "training" /
             patient_name /
             f"{patient_name}_4d.nii.gz"
         )
@@ -46,17 +47,6 @@ def get_patient_animation(
 
         data = load_nifti(nifti_path)
 
-        # Corrección orientación
-        data = np.rot90(
-            data,
-            k=1,
-            axes=(0, 1)
-        )
-
-        data = np.fliplr(data)
-
-        # Shape:
-        # X,Y,Z,T
 
         _, _, z_dim, total_frames = data.shape
 
